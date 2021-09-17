@@ -9,7 +9,7 @@
 using namespace std;
 
 /**
- * Datatype that represents a Journal with a title and entires
+ * Datatype that represents a Journal with a title and entries
  */
 struct Journal{
     string title;
