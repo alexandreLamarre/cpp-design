@@ -22,7 +22,8 @@ void work()
  * 
  * @return int exit status
  */
-int main(){
+int main()
+{
     thread t1(work);
     thread t2(work);
 
