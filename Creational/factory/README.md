@@ -14,3 +14,9 @@ Initial motivation for a factory design pattern:
 
 
 Factory : A component responsible solely for thw wholesale (not piecewise) construction of an Object
+
+### Summary 
+
+- A factory method is a static method that creates objects
+- A factory can take care of object creation
+- A factory can be external or reside inside the object as an inner class
