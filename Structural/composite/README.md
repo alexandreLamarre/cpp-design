@@ -8,3 +8,11 @@
   - e.g. Foo and Collection<Foo> has similar APIs
 
 A mechanism for treating individual (scalar) objects and compositions of objects in uniform manner
+
+### Summary 
+
+- Objects can use other objects via inheritance/composition
+- Some composed and singular objects need similar/identical behaviours
+- Composite design patterns lets us treat both types of objects uniformly
+- C++ uses duck typing, expecting enumerable types to provide begin()/end()
+- A single object cn masquerade as a collection
