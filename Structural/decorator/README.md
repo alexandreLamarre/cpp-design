@@ -7,3 +7,10 @@
 - Two options:
   - Aggregate the decorated object
   - Inherit the decorated object
+
+### Summary 
+- A dynamic decorator keeps the reference to the decorated object
+  - ColoredShape{Square{}}
+- A static decorator uses mixin inheritance
+  - ColoredShape<Square>
+- Both approaches allow limitless composition
