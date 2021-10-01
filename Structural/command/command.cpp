@@ -81,6 +81,10 @@ struct BankAccountCommand : Command
     }
 };
 
+struct CompositeBankAccountCommand : vector<BankAccountCommand>, Command
+{
+};
+
 int main()
 {
     BankAccount ba;
