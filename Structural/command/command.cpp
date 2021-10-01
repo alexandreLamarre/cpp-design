@@ -8,26 +8,31 @@ struct BankAccount
     int balance{0};
     int overdraftLimit{-500};
 
-    void deposit(int amount)
+    bool deposit(int amount)
     {
         balance += amount;
         cout << "deposited " << amount << ",  balance is now " << balance << endl;
+        return true;
     }
 
-    void withdraw(int amount)
+    bool withdraw(int amount)
     {
         if (balance - amount >= overdraftLimit)
         {
             balance -= amount;
             cout << "withdrew " << amount
                  << " , balance is now " << balance << endl;
+            return true;
         }
+        return false;
     }
 };
 
 struct Command
 {
+    bool completed;
     virtual void call() = 0;
+    virtual void undo() = 0;
 };
 
 struct BankAccountCommand : Command
@@ -40,17 +45,36 @@ struct BankAccountCommand : Command
     } action;
     int amount;
 
-    BankAccountCommand(BankAccount &account, Action action, int amount) : account(account), action(action), amount(amount) {}
+    BankAccountCommand(BankAccount &account, Action action, int amount) : account(account), action(action), amount(amount)
+    {
+        completed = false;
+    }
 
     void call() override
     {
         switch (action)
         {
         case deposit:
-            account.deposit(amount);
+            completed = account.deposit(amount);
             break;
         case withdraw:
+            completed = account.withdraw(amount);
+        default:
+            break;
+        }
+    }
+
+    void undo() override
+    {
+        if (!completed)
+            return;
+        switch (action)
+        {
+        case deposit:
             account.withdraw(amount);
+            break;
+        case withdraw:
+            account.deposit(amount);
         default:
             break;
         }
@@ -69,6 +93,10 @@ int main()
 
     for (auto comm : commands)
         comm.call();
+    for (auto it = commands.rbegin(); it != commands.rend(); it++)
+    {
+        it->undo();
+    }
 
     cout << ba.balance << endl;
     return 0;
