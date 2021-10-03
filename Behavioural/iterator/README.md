@@ -9,3 +9,10 @@
   - Coroutines
 
 Iterator : An object that facilitates the traversal of a data structure
+
+### Summary
+- An object can be iterated (traversed) if it defines a begin()/end() pair
+- An iterator specified how you can traverse an object
+- Typically requires of != and ++ operators
+- ++ is called sporadically, so cannot be recursive, but...
+- Coroutines allow recursion through generator-yielding functions
