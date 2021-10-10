@@ -10,3 +10,8 @@
   Strategy : Enables the exact behaviour of a system to be selected either at run-time (dynamic) or compile-time (static)
 
   Also known as a policy (esp. in the C++ world)
+
+### Summary 
+- Define an algorithm at a high level
+- Define the interface you expect each strategy to follow
+- Provide for either dynamic or static composition of strategy in the overall algorithm
