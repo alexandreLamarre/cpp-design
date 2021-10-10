@@ -10,3 +10,13 @@
   - Signal and slot (Boost,qt, etc...)
 
 Observer : Object that wishes to be informed about events happening in the system. The entity generating the events is an `observer`
+
+### Summary 
+
+Two participants:
+  - Observable provides a way of subscribing to an event (signal)
+  - Observer performs the subscription
+
+- Observable implementation is always intrusive (observer doesn't need to be)
+- Multithreaded/reentrant use can cause issues
+- Ready-made implementations of Observer are available
