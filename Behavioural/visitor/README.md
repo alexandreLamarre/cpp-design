@@ -10,3 +10,8 @@
   - But preferably avoid type refects
 
 Visitor: A pattern where a component visitor is allowed to traverse the entire inheritance hierarchy. Implemented by propagating a single `visit()` method throughout the entire hierarchy
+
+### Summary
+- Propagate an accept(visitor* v) method throughout the entire hierarchy
+- Create a visitor with visit(Foo*), Visit(Bar*), ... for each element in the hierarchy
+- Each accept() simply calls visitor.visit(this)
