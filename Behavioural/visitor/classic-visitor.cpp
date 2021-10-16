@@ -8,21 +8,21 @@
  * @copyright Copyright (c) 2021
  * 
  */
-#include <iostream>
+// visitor examples for design patterns c++ book
 #include <sstream>
 #include <string>
-
+#include <iostream>
 using namespace std;
 
+struct SubtractionExpression;
 struct DoubleExpression;
 struct AdditionExpression;
-struct SubstractionExpression;
 
 struct ExpressionVisitor
 {
     virtual void visit(DoubleExpression *de) = 0;
     virtual void visit(AdditionExpression *ae) = 0;
-    virtual void visit(SubstractionExpression *se) = 0;
+    virtual void visit(SubtractionExpression *se) = 0;
 };
 
 struct ExpressionPrinter : ExpressionVisitor
@@ -31,7 +31,15 @@ struct ExpressionPrinter : ExpressionVisitor
     string str() const { return oss.str(); }
     void visit(DoubleExpression *de) override;
     void visit(AdditionExpression *ae) override;
-    void visit(SubstractionExpression *se) override;
+    void visit(SubtractionExpression *se) override;
+};
+
+struct ExpressionEvaluator : ExpressionVisitor
+{
+    double result;
+    void visit(DoubleExpression *de) override;
+    void visit(AdditionExpression *ae) override;
+    void visit(SubtractionExpression *se) override;
 };
 
 struct Expression
@@ -70,14 +78,14 @@ struct AdditionExpression : Expression
     }
 };
 
-struct SubstractionExpression : Expression
+struct SubtractionExpression : Expression
 {
     Expression *left, *right;
 
-    SubstractionExpression(Expression *const left, Expression *const right)
+    SubtractionExpression(Expression *const left, Expression *const right)
         : left{left}, right{right} {}
 
-    ~SubstractionExpression()
+    ~SubtractionExpression()
     {
         delete left;
         delete right;
@@ -94,38 +102,63 @@ void ExpressionPrinter::visit(DoubleExpression *de)
     oss << de->value;
 }
 
-void ExpressionPrinter::visit(AdditionExpression *ae)
+void ExpressionPrinter::visit(AdditionExpression *e)
 {
-    bool needBraces = dynamic_cast<SubstractionExpression *>(ae->right);
-    if (needBraces)
+    bool need_braces = dynamic_cast<SubtractionExpression *>(e->right);
+    e->left->accept(this);
+    oss << "-";
+    if (need_braces)
         oss << "(";
-    ae->left->accept(this);
-    oss << " + ";
-    ae->right->accept(this);
-    if (needBraces)
+    e->right->accept(this);
+    if (need_braces)
         oss << ")";
 }
 
-void ExpressionPrinter::visit(SubstractionExpression *se)
+void ExpressionPrinter::visit(SubtractionExpression *se)
 {
-    bool needBraces = dynamic_cast<SubstractionExpression *>(se->right);
-    if (needBraces)
+    bool need_braces = dynamic_cast<SubtractionExpression *>(se->right);
+    if (need_braces)
         oss << "(";
     se->left->accept(this);
-    oss << " - ";
+    oss << "-";
     se->right->accept(this);
-    if (needBraces)
+    if (need_braces)
         oss << ")";
 }
-int main(int argc, const char **argv)
+
+void ExpressionEvaluator::visit(DoubleExpression *de)
+{
+    result = de->value;
+}
+
+void ExpressionEvaluator::visit(AdditionExpression *ae)
+{
+    ae->left->accept(this);
+    auto temp = result;
+    ae->right->accept(this);
+    result += temp;
+}
+
+void ExpressionEvaluator::visit(SubtractionExpression *se)
+{
+    se->left->accept(this);
+    auto temp = result;
+    se->right->accept(this);
+    result -= temp;
+}
+
+void main()
 {
     auto e = new AdditionExpression{
         new DoubleExpression{1},
-        new SubstractionExpression{
+        new SubtractionExpression{
             new DoubleExpression{2},
             new DoubleExpression{3}}};
-    ExpressionPrinter ep;
-    ep.visit(e);
-    cout << ep.str() << endl;
-    return 0;
+    ostringstream oss;
+    ExpressionPrinter printer;
+    ExpressionEvaluator evaluator;
+    printer.visit(e);
+    evaluator.visit(e);
+    cout << printer.str() << " = " << evaluator.result << endl;
+    getchar();
 }
